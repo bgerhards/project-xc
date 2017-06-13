@@ -9,7 +9,7 @@ it('renders without crashing', () => {
 
 it('renders welcome message', () => {
   const wrapper = shallow(<App />);
-  const welcome = <h2>Welcome to React</h2>;
-  
-  expect(wrapper).toContainReact(welcome)
+  const heading = <h1>XML Formatter</h1>;
+
+  expect(wrapper).toContainReact(welcome);
 });
