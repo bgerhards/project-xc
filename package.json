@@ -5,6 +5,7 @@
   "dependencies": {
     "normalize.css": "^7.0.0",
     "react": "^15.5.4",
+    "react-codemirror": "^1.0.0",
     "react-dom": "^15.5.4"
   },
   "devDependencies": {
