@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
+import { pd } from 'pretty-data';
+
 import './Formatter.css';
 
 import Input from '../Input/Input';
+import Output from '../Output/Output';
 
 class Formatter extends Component {
     constructor(props) {
@@ -13,10 +16,19 @@ class Formatter extends Component {
         };
 
         this.handleChange = this.handleChange.bind(this);
+        this.handleClick = this.handleClick.bind(this);
     }
 
     handleChange(newCode) {
-        this.setState({ originalCode: newCode });
+        const newState = Object.assign({}, this.state, { originalCode: newCode });
+        this.setState(newState);
+    }
+
+    handleClick() {
+        const formattedCode = pd.xml(this.state.originalCode);
+        const newState = Object.assign({}, this.state, { formattedCode });
+
+        this.setState(newState);
     }
 
     render() {
@@ -24,10 +36,14 @@ class Formatter extends Component {
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-xs-6">
-                        <Input onChange={this.handleChange} />
+                        <Input
+                            originalCode={this.state.originalCode}
+                            handleChange={this.handleChange}
+                            handleClick={this.handleClick}
+                        />
                     </div>
                     <div className="col-xs-6">
-                        <h2>Output</h2>
+                        <Output formattedCode={this.state.formattedCode} />
                     </div>
                 </div>
             </div>

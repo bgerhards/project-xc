@@ -18,17 +18,24 @@ class Input extends Component {
         };
 
         this.handleChange = this.handleChange.bind(this);
+        this.handleClick = this.handleClick.bind(this);
     }
 
     handleChange(newCode) {
-        this.props.onChange(newCode);
+        this.props.handleChange(newCode);
+    }
+
+    handleClick() {
+        this.props.handleClick();
     }
 
     render() {
         return (
             <div className="input">
                 <h2>Input</h2>
-                <CodeMirror options={this.state.options} onChange={this.handleChange} />
+                <CodeMirror value={this.props.originalCode} options={this.state.options} onChange={this.handleChange} />
+                <br />
+                <button type="button" onClick={this.handleClick}>Format</button>
             </div>
         );
     }
