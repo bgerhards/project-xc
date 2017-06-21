@@ -27,6 +27,7 @@ class Input extends Component {
     render() {
         return (
             <div className="input">
+                <h2>Input</h2>
                 <CodeMirror options={this.state.options} onChange={this.handleChange} />
             </div>
         );

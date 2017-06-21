@@ -8,7 +8,8 @@ class Formatter extends Component {
         super(props);
 
         this.state = {
-            originalCode: ''
+            originalCode: '',
+            formattedCode: ''
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -26,7 +27,7 @@ class Formatter extends Component {
                         <Input onChange={this.handleChange} />
                     </div>
                     <div className="col-xs-6">
-                        Output
+                        <h2>Output</h2>
                     </div>
                 </div>
             </div>
