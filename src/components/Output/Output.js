@@ -22,7 +22,9 @@ class Output extends Component {
         return (
             <div className="output">
                 <h2>Output</h2>
-                <CodeMirror value={this.props.formattedCode} options={this.state.options} />
+                {this.props.formattedCode.length > 0 && 
+                    <CodeMirror ref={(cm) => this.cm = cm} value={this.props.formattedCode} options={this.state.options} />
+                }
             </div>
         );
     }
