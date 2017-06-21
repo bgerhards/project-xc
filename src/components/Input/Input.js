@@ -16,12 +16,18 @@ class Input extends Component {
                 autofocus: true
             }
         };
+
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(newCode) {
+        this.props.onChange(newCode);
     }
 
     render() {
         return (
             <div className="input">
-                <CodeMirror options={this.state.options} />
+                <CodeMirror options={this.state.options} onChange={this.handleChange} />
             </div>
         );
     }
