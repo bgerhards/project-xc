@@ -16,15 +16,29 @@ class Output extends Component {
                 readOnly: true
             }
         };
+
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    componentDidUpdate(newProps) {
+        const cm = this.cm.getCodeMirror();
+        cm.getDoc().setValue(this.props.formattedCode);
+    }
+
+    handleChange = newCode => {
+        const cm = this.cm.getCodeMirror();
+        cm.getDoc().setValue(this.props.formattedCode);
     }
 
     render() {
         return (
             <div className="output">
                 <h2>Output</h2>
-                {this.props.formattedCode.length > 0 && 
-                    <CodeMirror ref={(cm) => this.cm = cm} value={this.props.formattedCode} options={this.state.options} />
-                }
+                <CodeMirror
+                    ref={(cm) => this.cm = cm}
+                    value={this.props.formattedCode}
+                    options={this.state.options}
+                />
             </div>
         );
     }
