@@ -14,12 +14,14 @@
     "enzyme": "^2.8.2",
     "jest-enzyme": "^3.2.0",
     "react-scripts": "^1.0.7",
-    "react-test-renderer": "^15.5.4"
+    "react-test-renderer": "^15.5.4",
+    "firebase-tools": "^3.9.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "react-scripts build && firebase deploy"
   }
 }
