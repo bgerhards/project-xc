@@ -16,7 +16,9 @@ class Formatter extends Component {
         };
 
         this.handleChange = this.handleChange.bind(this);
-        this.handleClick = this.handleClick.bind(this);
+
+        this.handleFormatClick = this.handleFormatClick.bind(this);
+        this.handleMinifyClick = this.handleMinifyClick.bind(this);
     }
 
     handleChange(newCode) {
@@ -24,8 +26,15 @@ class Formatter extends Component {
         this.setState(newState);
     }
 
-    handleClick() {
+    handleFormatClick() {
         const formattedCode = pd.xml(this.state.originalCode);
+        const newState = Object.assign({}, this.state, { formattedCode });
+
+        this.setState(newState);
+    }
+
+    handleMinifyClick() {
+        const formattedCode = pd.xmlmin(this.state.originalCode);
         const newState = Object.assign({}, this.state, { formattedCode });
 
         this.setState(newState);
@@ -39,7 +48,8 @@ class Formatter extends Component {
                         <Input
                             originalCode={this.state.originalCode}
                             handleChange={this.handleChange}
-                            handleClick={this.handleClick}
+                            handleFormatClick={this.handleFormatClick}
+                            handleMinifyClick={this.handleMinifyClick}
                         />
                     </div>
                     <div className="col-xs-6">

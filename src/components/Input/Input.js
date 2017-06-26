@@ -20,15 +20,21 @@ class Input extends Component {
         };
 
         this.handleChange = this.handleChange.bind(this);
-        this.handleClick = this.handleClick.bind(this);
+
+        this.format = this.format.bind(this);
+        this.minify = this.minify.bind(this)
     }
 
     handleChange(newCode) {
         this.props.handleChange(newCode);
     }
 
-    handleClick() {
-        this.props.handleClick();
+    format() {
+        this.props.handleFormatClick();
+    }
+
+    minify() {
+        this.props.handleMinifyClick();
     }
 
     render() {
@@ -37,7 +43,8 @@ class Input extends Component {
                 <h2>Input</h2>
                 <CodeMirror value={this.props.originalCode} options={this.state.options} onChange={this.handleChange} />
                 <br />
-                <Button onClick={this.handleClick}>Format</Button>
+                <Button onClick={this.format}>Format</Button>
+                <Button onClick={this.minify}>Minify</Button>
             </div>
         );
     }
