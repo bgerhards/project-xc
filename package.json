@@ -6,16 +6,16 @@
     "@material/button": "^0.3.7",
     "normalize.css": "^7.0.0",
     "pretty-data": "^0.40.0",
-    "react": "^15.5.4",
+    "react": "^15.6.1",
     "react-codemirror": "^1.0.0",
-    "react-dom": "^15.5.4"
+    "react-dom": "^15.6.1"
   },
   "devDependencies": {
-    "enzyme": "^2.8.2",
+    "enzyme": "^2.9.1",
+    "firebase-tools": "^3.9.1",
     "jest-enzyme": "^3.2.0",
     "react-scripts": "^1.0.7",
-    "react-test-renderer": "^15.5.4",
-    "firebase-tools": "^3.9.1"
+    "react-test-renderer": "^15.6.1"
   },
   "scripts": {
     "start": "react-scripts start",
