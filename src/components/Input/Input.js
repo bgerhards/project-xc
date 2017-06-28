@@ -3,6 +3,8 @@ import CodeMirror from 'react-codemirror';
 import 'codemirror/mode/xml/xml';
 
 import 'codemirror/lib/codemirror.css';
+import 'codemirror/theme/material.css';
+
 import './Input.css';
 
 import Button from '../Button/Button';
@@ -15,7 +17,8 @@ class Input extends Component {
             options: {
 			    lineNumbers: true,
                 mode: 'xml',
-                autofocus: true
+                autofocus: true,
+                theme: 'material'
             }
         };
 

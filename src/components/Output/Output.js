@@ -3,6 +3,8 @@ import CodeMirror from 'react-codemirror';
 import 'codemirror/mode/xml/xml';
 
 import 'codemirror/lib/codemirror.css';
+import 'codemirror/theme/material.css';
+
 import './Output.css';
 
 import Button from '../Button/Button';
@@ -15,7 +17,8 @@ class Output extends Component {
             options: {
 			    lineNumbers: true,
                 mode: 'xml',
-                readOnly: true
+                readOnly: true,
+                theme: 'material'
             }
         };
 
