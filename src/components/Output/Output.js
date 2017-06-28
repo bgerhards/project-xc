@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import CodeMirror from 'react-codemirror';
-import 'codemirror/mode/xml/xml';
 
+import 'codemirror/mode/xml/xml';
+import 'codemirror/addon/edit/matchtags';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/material.css';
 
@@ -18,7 +19,10 @@ class Output extends Component {
 			    lineNumbers: true,
                 mode: 'xml',
                 readOnly: true,
-                theme: 'material'
+                theme: 'material',
+                matchTags: { 
+                    bothTags: true
+                }
             }
         };
 
