@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { pd } from 'pretty-data';
+import { parseString as ps } from 'xml2js';
 
 import './Formatter.css';
 
@@ -19,6 +20,7 @@ class Formatter extends Component {
 
         this.handleFormatClick = this.handleFormatClick.bind(this);
         this.handleMinifyClick = this.handleMinifyClick.bind(this);
+        this.handleConvertClick = this.handleConvertClick.bind(this);
     }
 
     handleChange(newCode) {
@@ -40,6 +42,12 @@ class Formatter extends Component {
         this.setState(newState);
     }
 
+    handleConvertClick() {
+        ps(this.state.originalCode, { trim: true }, (err, result) => {
+            console.log(result);
+        });
+    }
+
     render() {
         return (
             <div className="container-fluid">
@@ -50,6 +58,7 @@ class Formatter extends Component {
                             handleChange={this.handleChange}
                             handleFormatClick={this.handleFormatClick}
                             handleMinifyClick={this.handleMinifyClick}
+                            handleConvertClick={this.handleConvertClick}
                         />
                     </div>
                     <div className="col-xs-6">

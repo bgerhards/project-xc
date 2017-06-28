@@ -19,8 +19,15 @@ class Input extends Component {
             }
         };
 
+        this.handleChange = this.handleChange.bind(this);
+
         this.format = this.format.bind(this);
-        this.minify = this.minify.bind(this)
+        this.minify = this.minify.bind(this);
+        this.convert = this.convert.bind(this);
+    }
+
+    handleChange(newCode) {
+        this.props.handleChange(newCode);
     }
 
     format() {
@@ -31,6 +38,10 @@ class Input extends Component {
         this.props.handleMinifyClick();
     }
 
+    convert() {
+        this.props.handleConvertClick();
+    }
+
     render() {
         return (
             <div className="input">
@@ -38,10 +49,12 @@ class Input extends Component {
                 <CodeMirror 
                     value={this.props.originalCode}
                     options={this.state.options}
+                    onChange={this.handleChange}
                 />
                 <br />
                 <Button onClick={this.format}>Format</Button>
                 <Button onClick={this.minify}>Minify</Button>
+                <Button onClick={this.convert}>JSON</Button>
             </div>
         );
     }
