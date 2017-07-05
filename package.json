@@ -9,13 +9,13 @@
     "react": "^15.6.1",
     "react-codemirror": "^1.0.0",
     "react-dom": "^15.6.1",
+    "react-scripts": "1.0.10",
     "xml2js": "^0.4.17"
   },
   "devDependencies": {
+    "enzyme": "^2.9.1",
     "firebase-tools": "^3.9.1",
-    "jest-enzyme": "^3.4.0",
-    "react-scripts": "^1.0.10",
-    "react-test-renderer": "^15.6.1"
+    "jest-enzyme": "^3.4.0"
   },
   "scripts": {
     "start": "react-scripts start",
