@@ -29,14 +29,14 @@ class Formatter extends Component {
     }
 
     handleFormatClick() {
-        const formattedCode = pd.xml(this.state.originalCode);
+        const formattedCode = pd.xml(this.state.originalCode.trim());
         const newState = Object.assign({}, this.state, { formattedCode });
 
         this.setState(newState);
     }
 
     handleMinifyClick() {
-        const formattedCode = pd.xmlmin(this.state.originalCode);
+        const formattedCode = pd.xmlmin(this.state.originalCode.trim());
         const newState = Object.assign({}, this.state, { formattedCode });
 
         this.setState(newState);
