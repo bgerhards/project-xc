@@ -13,7 +13,25 @@ class Formatter extends Component {
 
         this.state = {
             originalCode: '',
-            formattedCode: ''
+            formattedCode: '',
+            inputOptions: {
+			    lineNumbers: true,
+                mode: 'xml',
+                autofocus: true,
+                theme: 'material',
+                matchTags: { 
+                    bothTags: true
+                }
+            },
+            outputOptions: {
+			    lineNumbers: true,
+                mode: 'xml',
+                readOnly: true,
+                theme: 'material',
+                matchTags: { 
+                    bothTags: true
+                }
+            }
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -29,22 +47,39 @@ class Formatter extends Component {
     }
 
     handleFormatClick() {
-        const formattedCode = pd.xml(this.state.originalCode.trim());
-        const newState = Object.assign({}, this.state, { formattedCode });
+        const { mode } = this.state.outputOptions;
+        const originalCode = this.state.originalCode.trim();
 
-        this.setState(newState);
+        let formattedCode = ''; 
+
+        if(mode === 'xml') {
+            formattedCode = pd.xml(originalCode);
+
+            const newState = Object.assign({}, this.state, { formattedCode });
+            this.setState(newState);
+        }
+        else if(mode === 'application/json') {
+            ps(this.state.originalCode, { trim: true }, (err, result) => {
+                formattedCode = pd.json(result);
+
+                const newState = Object.assign({}, this.state, { formattedCode });
+                this.setState(newState);
+            });            
+        }                
     }
 
     handleMinifyClick() {
-        const formattedCode = pd.xmlmin(this.state.originalCode.trim());
+        const formattedCode = pd.xmlmin(this.state.originalCode.trim());        
         const newState = Object.assign({}, this.state, { formattedCode });
 
         this.setState(newState);
     }
 
     handleConvertClick() {
+        const outputOptions = Object.assign({}, this.state.outputOptions, { mode: 'application/json' });
+
         ps(this.state.originalCode, { trim: true }, (err, result) => {
-            console.log(result);
+           this.setState({ formattedCode: JSON.stringify(result), outputOptions });
         });
     }
 
@@ -59,10 +94,14 @@ class Formatter extends Component {
                             handleFormatClick={this.handleFormatClick}
                             handleMinifyClick={this.handleMinifyClick}
                             handleConvertClick={this.handleConvertClick}
+                            options={this.state.inputOptions}
                         />
                     </div>
                     <div className="col-xs-6">
-                        <Output formattedCode={this.state.formattedCode} />
+                        <Output 
+                            formattedCode={this.state.formattedCode}
+                            options={this.state.outputOptions} 
+                        />
                     </div>
                 </div>
             </div>

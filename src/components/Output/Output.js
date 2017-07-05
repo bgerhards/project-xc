@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import CodeMirror from 'react-codemirror';
 
 import 'codemirror/mode/xml/xml';
+import 'codemirror/mode/javascript/javascript';
 import 'codemirror/addon/edit/matchtags';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/material.css';
@@ -13,18 +14,6 @@ import Button from '../Button/Button';
 class Output extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            options: {
-			    lineNumbers: true,
-                mode: 'xml',
-                readOnly: true,
-                theme: 'material',
-                matchTags: { 
-                    bothTags: true
-                }
-            }
-        };
 
         this.handleClick = this.handleClick.bind(this);
     }
@@ -58,7 +47,7 @@ class Output extends Component {
                 <CodeMirror
                     ref={(cm) => this.cm = cm}
                     value={this.props.formattedCode}
-                    options={this.state.options}
+                    options={this.props.options}
                 />
                 <br />
                 <Button onClick={this.handleClick}>Copy</Button>
