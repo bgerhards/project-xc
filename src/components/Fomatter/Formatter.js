@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { pd } from 'pretty-data';
-import { parseString as ps } from 'xml2js';
+import { parseString as ps, Builder } from 'xml2js';
 
 import './Formatter.css';
 
@@ -38,6 +38,8 @@ class Formatter extends Component {
         this.handleFormatClick = this.handleFormatClick.bind(this);
         this.handleMinifyClick = this.handleMinifyClick.bind(this);
         this.handleConvertClick = this.handleConvertClick.bind(this);
+
+        this.handleModeChange = this.handleModeChange.bind(this);
     }
 
     handleChange(newCode) {
@@ -77,18 +79,36 @@ class Formatter extends Component {
 
     handleConvertClick() {
         const { mode } = this.state.inputOptions;
+
+        console.log(mode);
         
         if(mode === 'xml') {
             ps(this.state.originalCode, { trim: true }, (err, result) => {
                 const formattedCode = pd.json(JSON.stringify(result));            
                 const outputOptions = Object.assign({}, this.state.outputOptions, { mode: 'application/json' });
 
-                this.setState({ formattedCode, outputOptions });
+                const newState = Object.assign({}, this.state, { formattedCode, outputOptions });
+
+                this.setState(newState);
             });
         }
         else if(mode === 'application/json') {
+            const builder = new Builder();
+            const xml = builder.buildObject(JSON.parse(this.state.originalCode));
 
+            const formattedCode = pd.xml(xml.trim());
+
+            const newState = Object.assign({}, this.state, { formattedCode });
+
+            this.setState(newState);
         }
+    }
+
+    handleModeChange(mode) {
+        const inputOptions = Object.assign({}, this.state.inputOptions, { mode });
+        const newState = Object.assign({}, this.state, { inputOptions });
+
+        this.setState(newState);
     }
 
     render() {
@@ -102,6 +122,7 @@ class Formatter extends Component {
                             handleFormatClick={this.handleFormatClick}
                             handleMinifyClick={this.handleMinifyClick}
                             handleConvertClick={this.handleConvertClick}
+                            handleModeChange={this.handleModeChange}
                             options={this.state.inputOptions}
                         />
                     </div>

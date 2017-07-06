@@ -41,11 +41,7 @@ class Input extends Component {
     }
 
     handleModeChange(mode) {
-        console.log(mode);
-    }
-
-    handleTabSizeChange(tabSize) {
-        console.log(tabSize);
+        this.props.handleModeChange(mode);
     }
 
     render() {
@@ -55,7 +51,6 @@ class Input extends Component {
                 <OptionsBar 
                     options={this.props.options}
                     handleModeChange={this.handleModeChange}
-                    handleTabSizeChange={this.handleTabSizeChange}
                 />
                 <CodeMirror 
                     value={this.props.originalCode}
@@ -65,7 +60,9 @@ class Input extends Component {
                 <br />
                 <Button onClick={this.format}>Format</Button>
                 <Button onClick={this.minify}>Minify</Button>
-                <Button onClick={this.convert}>JSON</Button>
+                <Button onClick={this.convert}>
+                    {this.props.options.mode === 'xml' ? 'XML' : 'JSON'}
+                </Button>
             </div>
         );
     }

@@ -2,9 +2,8 @@ import React from 'react';
 
 import './OptionsBar.css';
 
-export default ({ options: { mode, tabSize }, handleModeChange, handleTabSizeChange }) => {
+export default ({ options: { mode, tabSize }, handleModeChange }) => {
     const onModeChange = e => handleModeChange(e.target.value);
-    const onTabSizeChange = e => handleTabSizeChange(e.target.value);
 
     return (
         <div className="OptionsBar">
@@ -14,10 +13,10 @@ export default ({ options: { mode, tabSize }, handleModeChange, handleTabSizeCha
                         className="mdc-select"
                         name="tabSize"
                         id="tabSize"
-                        onChange={onTabSizeChange}
+                        onChange={onModeChange}
                         value={tabSize}
                     >
-                        <option value="XML">XML</option>
+                        <option value="xml">XML</option>
                         <option value="application/json">JSON</option>
                     </select>
                 </div>
