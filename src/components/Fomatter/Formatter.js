@@ -21,9 +21,7 @@ class Formatter extends Component {
                 theme: 'material',
                 matchTags: { 
                     bothTags: true
-                },
-                tabSize: 4,
-                indentUnit: 6
+                }
             },
             outputOptions: {
 			    lineNumbers: true,
@@ -31,9 +29,7 @@ class Formatter extends Component {
                 theme: 'material',
                 matchTags: { 
                     bothTags: true
-                },
-                tabSize: 4,
-                indentUnit: 6
+                }
             }
         };
 
@@ -66,6 +62,7 @@ class Formatter extends Component {
                 formattedCode = pd.json(result);
 
                 const newState = Object.assign({}, this.state, { formattedCode });
+
                 this.setState(newState);
             });            
         }                
@@ -79,11 +76,19 @@ class Formatter extends Component {
     }
 
     handleConvertClick() {
-        const outputOptions = Object.assign({}, this.state.outputOptions, { mode: 'application/json' });
+        const { mode } = this.state.inputOptions;
+        
+        if(mode === 'xml') {
+            ps(this.state.originalCode, { trim: true }, (err, result) => {
+                const formattedCode = pd.json(JSON.stringify(result));            
+                const outputOptions = Object.assign({}, this.state.outputOptions, { mode: 'application/json' });
 
-        ps(this.state.originalCode, { trim: true }, (err, result) => {
-           this.setState({ formattedCode: JSON.stringify(result), outputOptions });
-        });
+                this.setState({ formattedCode, outputOptions });
+            });
+        }
+        else if(mode === 'application/json') {
+
+        }
     }
 
     render() {

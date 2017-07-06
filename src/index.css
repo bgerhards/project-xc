@@ -1,6 +1,8 @@
 @import '~normalize.css';
 @import './styles/flexboxgrid.css';
 
+@import '~@material/select/dist/mdc.select.css';
+
 html,
 body {
   height: 100%;
