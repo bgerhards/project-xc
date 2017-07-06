@@ -79,8 +79,6 @@ class Formatter extends Component {
 
     handleConvertClick() {
         const { mode } = this.state.inputOptions;
-
-        console.log(mode);
         
         if(mode === 'xml') {
             ps(this.state.originalCode, { trim: true }, (err, result) => {
@@ -95,7 +93,6 @@ class Formatter extends Component {
         else if(mode === 'application/json') {
             const builder = new Builder();
             const xml = builder.buildObject(JSON.parse(this.state.originalCode));
-
             const formattedCode = pd.xml(xml.trim());
 
             const newState = Object.assign({}, this.state, { formattedCode });

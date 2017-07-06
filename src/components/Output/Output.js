@@ -12,18 +12,13 @@ import './Output.css';
 import Button from '../Button/Button';
 
 class Output extends Component {
-    constructor(props) {
-        super(props);
-
-        this.handleClick = this.handleClick.bind(this);
-    }
-
+    
     componentDidUpdate(newProps) {
         const cm = this.cm.getCodeMirror();
         cm.getDoc().setValue(this.props.formattedCode);
     }
 
-    handleClick(e) {
+    handleClick = (e) => {
         let fakeElem = document.createElement('textarea');
 
         fakeElem.className = 'sr-only';
