@@ -21,16 +21,19 @@ class Formatter extends Component {
                 theme: 'material',
                 matchTags: { 
                     bothTags: true
-                }
+                },
+                tabSize: 4,
+                indentUnit: 6
             },
             outputOptions: {
 			    lineNumbers: true,
                 mode: 'xml',
-                readOnly: true,
                 theme: 'material',
                 matchTags: { 
                     bothTags: true
-                }
+                },
+                tabSize: 4,
+                indentUnit: 6
             }
         };
 
@@ -100,7 +103,7 @@ class Formatter extends Component {
                     <div className="col-xs-6">
                         <Output 
                             formattedCode={this.state.formattedCode}
-                            options={this.state.outputOptions} 
+                            options={this.state.outputOptions}
                         />
                     </div>
                 </div>
