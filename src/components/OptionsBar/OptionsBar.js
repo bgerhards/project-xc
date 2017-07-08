@@ -14,7 +14,7 @@ export default ({ options: { mode, tabSize }, handleModeChange }) => {
                         name="tabSize"
                         id="tabSize"
                         onChange={onModeChange}
-                        value={tabSize}
+                        value={mode}
                     >
                         <option value="xml">XML</option>
                         <option value="application/json">JSON</option>

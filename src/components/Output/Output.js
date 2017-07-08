@@ -39,6 +39,22 @@ class Output extends Component {
         return (
             <div className="output" id="output">
                 <h2>Output</h2>
+                <div className="OptionsBar">
+                    <div className="row">
+                        <div className="col-xs">
+                            <select 
+                                className="mdc-select"
+                                name="tabSize"
+                                id="tabSize"
+                                value={this.props.options.mode}
+                                readOnly
+                                disabled>
+                                <option value="xml">XML</option>
+                                <option value="application/json">JSON</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
                 <CodeMirror
                     ref={(cm) => this.cm = cm}
                     value={this.props.formattedCode}

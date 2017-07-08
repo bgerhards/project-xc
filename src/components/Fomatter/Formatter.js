@@ -39,7 +39,8 @@ class Formatter extends Component {
         this.handleMinifyClick = this.handleMinifyClick.bind(this);
         this.handleConvertClick = this.handleConvertClick.bind(this);
 
-        this.handleModeChange = this.handleModeChange.bind(this);
+        this.handleInputModeChange = this.handleInputModeChange.bind(this);
+        this.handleOutputModeChange = this.handleOutputModeChange.bind(this);
     }
 
     handleChange(newCode) {
@@ -101,9 +102,16 @@ class Formatter extends Component {
         }
     }
 
-    handleModeChange(mode) {
+    handleInputModeChange(mode) {
         const inputOptions = Object.assign({}, this.state.inputOptions, { mode });
         const newState = Object.assign({}, this.state, { inputOptions });
+
+        this.setState(newState);
+    }
+
+    handleOutputModeChange(mode) {
+        const outputOptions = Object.assign({}, this.state.outputOptions, { mode });
+        const newState = Object.assign({} , this.state, { outputOptions });
 
         this.setState(newState);
     }
@@ -119,8 +127,10 @@ class Formatter extends Component {
                             handleFormatClick={this.handleFormatClick}
                             handleMinifyClick={this.handleMinifyClick}
                             handleConvertClick={this.handleConvertClick}
-                            handleModeChange={this.handleModeChange}
+                            handleInputModeChange={this.handleInputModeChange}
+                            handleOutputModeChange={this.handleOutputModeChange}
                             options={this.state.inputOptions}
+                            outputMode={this.state.outputOptions.mode}
                         />
                     </div>
                     <div className="col-xs-6">

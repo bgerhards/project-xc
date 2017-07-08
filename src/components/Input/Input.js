@@ -13,11 +13,12 @@ import OptionsBar from '../OptionsBar/OptionsBar';
 
 class Input extends Component {
     
-    handleChange = (newCode) => this.props.handleChange(newCode);
-    format = () => this.props.handleFormatClick();
-    minify = () => this.props.handleMinifyClick();
-    convert = () => this.props.handleConvertClick();
-    handleModeChange = (mode) => this.props.handleModeChange(mode);
+    handleCodeChange = (newCode) => this.props.handleChange(newCode);
+
+    handleFormatClick = () => this.props.handleFormatClick();
+    handleMinifyClick = () => this.props.handleMinifyClick();
+    handleInputModeChange = (mode) => this.props.handleInputModeChange(mode);
+    handleOutputModeChange = (e) => this.props.handleOutputModeChange(e.target.value);
 
     render() {
         return (
@@ -25,19 +26,31 @@ class Input extends Component {
                 <h2>Input</h2>
                 <OptionsBar 
                     options={this.props.options}
-                    handleModeChange={this.handleModeChange}
+                    handleModeChange={this.handleInputModeChange}
                 />
                 <CodeMirror 
                     value={this.props.originalCode}
                     options={this.props.options}
-                    onChange={this.handleChange}
+                    onChange={this.handleCodeChange}
                 />
                 <br />
-                <Button onClick={this.format}>Format</Button>
-                <Button onClick={this.minify}>Minify</Button>
-                <Button onClick={this.convert}>
-                    {this.props.options.mode === 'xml' ? 'JSON' : 'XML'}
-                </Button>
+                <div className="row">
+                    <div className="col-xs">
+                        <Button onClick={this.handleFormatClick}>Format</Button>
+                        <Button onClick={this.handleMinifyClick}>Minify</Button>
+                    </div>
+                    <div className="col-xs end-xs">
+                        <select 
+                            className="mdc-select"
+                            name="tabSize"
+                            id="tabSize"
+                            onChange={this.handleOutputModeChange}
+                            value={this.props.outputMode}>
+                            <option value="xml">XML</option>
+                            <option value="application/json">JSON</option>
+                        </select>
+                    </div>
+                </div>
             </div>
         );
     }
