@@ -19,7 +19,7 @@ class Formatter extends Component {
                 mode: 'xml',
                 autofocus: true,
                 theme: 'material',
-                matchTags: { 
+                matchTags: {
                     bothTags: true
                 }
             },
@@ -27,7 +27,7 @@ class Formatter extends Component {
 			    lineNumbers: true,
                 mode: 'xml',
                 theme: 'material',
-                matchTags: { 
+                matchTags: {
                     bothTags: true
                 }
             }
@@ -49,41 +49,48 @@ class Formatter extends Component {
     }
 
     handleFormatClick() {
-        const { mode } = this.state.outputOptions;
+        const {  mode: inputMode } = this.state.inputOptions;
+        const { mode: outputMode } = this.state.outputOptions;
+
         const originalCode = this.state.originalCode.trim();
 
-        let formattedCode = ''; 
+        let formattedCode = '';
 
-        if(mode === 'xml') {
-            formattedCode = pd.xml(originalCode);
-
-            const newState = Object.assign({}, this.state, { formattedCode });
-            this.setState(newState);
-        }
-        else if(mode === 'application/json') {
-            ps(this.state.originalCode, { trim: true }, (err, result) => {
-                formattedCode = pd.json(result);
+        if(outputMode === 'xml') {
+            if(inputMode === 'xml') {
+                formattedCode = pd.xml(originalCode);
 
                 const newState = Object.assign({}, this.state, { formattedCode });
-
                 this.setState(newState);
-            });            
-        }                
+            }
+        }
+
+        if(outputMode === 'application/json') {
+            if(inputMode === 'xml') {
+                ps(this.state.originalCode, { trim: true }, (err, result) => {
+                    formattedCode = pd.json(result);
+
+                    const newState = Object.assign({}, this.state, { formattedCode });
+
+                    this.setState(newState);
+                });
+            }
+        }
     }
 
     handleMinifyClick() {
-        const formattedCode = pd.xmlmin(this.state.originalCode.trim());        
+        const formattedCode = pd.xmlmin(this.state.originalCode.trim());
         const newState = Object.assign({}, this.state, { formattedCode });
 
         this.setState(newState);
     }
 
     handleConvertClick() {
-        const { mode } = this.state.inputOptions;
-        
+        const { mode } = this.state.outputOptions;
+
         if(mode === 'xml') {
             ps(this.state.originalCode, { trim: true }, (err, result) => {
-                const formattedCode = pd.json(JSON.stringify(result));            
+                const formattedCode = pd.json(JSON.stringify(result));
                 const outputOptions = Object.assign({}, this.state.outputOptions, { mode: 'application/json' });
 
                 const newState = Object.assign({}, this.state, { formattedCode, outputOptions });
@@ -134,7 +141,7 @@ class Formatter extends Component {
                         />
                     </div>
                     <div className="col-xs-6">
-                        <Output 
+                        <Output
                             formattedCode={this.state.formattedCode}
                             options={this.state.outputOptions}
                         />

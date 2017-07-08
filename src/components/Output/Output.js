@@ -61,7 +61,11 @@ class Output extends Component {
                     options={this.props.options}
                 />
                 <br />
-                <Button onClick={this.handleClick}>Copy</Button>
+                <div className="row">
+                    <div className="col-xs end-xs mr0">
+                        <Button onClick={this.handleClick}>Copy</Button>
+                    </div>
+                </div>
             </div>
         );
     }

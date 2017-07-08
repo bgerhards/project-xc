@@ -39,7 +39,7 @@ class Input extends Component {
                         <Button onClick={this.handleFormatClick}>Format</Button>
                         <Button onClick={this.handleMinifyClick}>Minify</Button>
                     </div>
-                    <div className="col-xs end-xs">
+                    <div className="col-xs end-xs middle-xs">
                         <select 
                             className="mdc-select"
                             name="tabSize"
