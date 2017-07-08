@@ -11,8 +11,8 @@ export default ({ options: { mode, tabSize }, handleModeChange }) => {
                 <div className="col-sm-12">
                     <select 
                         className="mdc-select"
-                        name="tabSize"
-                        id="tabSize"
+                        name="mode"
+                        id="mode"
                         onChange={onModeChange}
                         value={mode}
                     >
