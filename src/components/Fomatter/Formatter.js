@@ -82,7 +82,7 @@ class Formatter extends Component {
         const {  mode: inputMode } = this.state.inputOptions;
         const { mode: outputMode } = this.state.outputOptions;
 
-        const originalCode = inputMode != outputMode ? this.handleConvert(this.state.originalCode.trim(), inputMode, outputMode) : this.state.originalCode.trim();
+        const originalCode = inputMode !== outputMode ? this.handleConvert(this.state.originalCode.trim(), inputMode, outputMode) : this.state.originalCode.trim();
         const outputMethod = (outputMode === 'application/json' ? 'json' : outputMode) + 'min';
 
         const formattedCode = pd[outputMethod](originalCode);
@@ -95,12 +95,13 @@ class Formatter extends Component {
         switch(outputMode){
             case 'xml': return this.xmlConversion(originalCode, inputMode);
             case 'application/json': return this.jsonConversion(originalCode, inputMode);
+            default: return originalCode;
         }
     }
 
     xmlConversion(originalCode, inputMode){
         let formattedCode = '';
-        if(inputMode == 'application/json'){
+        if(inputMode === 'application/json'){
             const builder = new Builder();
             const xml = builder.buildObject(JSON.parse(originalCode));
             formattedCode = pd.xml(xml.trim());
@@ -111,7 +112,7 @@ class Formatter extends Component {
 
     jsonConversion(originalCode, inputMode){
         let formattedCode = '';
-        if(inputMode == 'xml'){
+        if(inputMode === 'xml'){
             ps(this.state.originalCode, { trim: true }, (err, result) => {
                 formattedCode = pd.json(result);
             });
