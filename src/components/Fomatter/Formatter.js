@@ -79,10 +79,45 @@ class Formatter extends Component {
     }
 
     handleMinifyClick() {
-        const formattedCode = pd.xmlmin(this.state.originalCode.trim());
+        const {  mode: inputMode } = this.state.inputOptions;
+        const { mode: outputMode } = this.state.outputOptions;
+
+        const originalCode = inputMode != outputMode ? this.handleConvert(this.state.originalCode.trim(), inputMode, outputMode) : this.state.originalCode.trim();
+        const outputMethod = (outputMode === 'application/json' ? 'json' : outputMode) + 'min';
+
+        const formattedCode = pd[outputMethod](originalCode);
         const newState = Object.assign({}, this.state, { formattedCode });
 
         this.setState(newState);
+    }
+
+    handleConvert(originalCode, inputMode, outputMode){
+        switch(outputMode){
+            case 'xml': return this.xmlConversion(originalCode, inputMode);
+            case 'application/json': return this.jsonConversion(originalCode, inputMode);
+        }
+    }
+
+    xmlConversion(originalCode, inputMode){
+        let formattedCode = '';
+        if(inputMode == 'application/json'){
+            const builder = new Builder();
+            const xml = builder.buildObject(JSON.parse(originalCode));
+            formattedCode = pd.xml(xml.trim());
+        }
+
+        return formattedCode;
+    }
+
+    jsonConversion(originalCode, inputMode){
+        let formattedCode = '';
+        if(inputMode == 'xml'){
+            ps(this.state.originalCode, { trim: true }, (err, result) => {
+                formattedCode = pd.json(result);
+            });
+        }
+
+        return formattedCode;
     }
 
     handleConvertClick() {
