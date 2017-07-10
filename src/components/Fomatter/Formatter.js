@@ -30,6 +30,12 @@ class Formatter extends Component {
                 matchTags: {
                     bothTags: true
                 }
+            },
+            indentMode: {
+                value: 'TAB'}
+                ,
+            indentQuantity: {
+                value: '3'
             }
         };
 
@@ -51,9 +57,11 @@ class Formatter extends Component {
     handleFormatClick() {
         const {  mode: inputMode } = this.state.inputOptions;
         const { mode: outputMode } = this.state.outputOptions;
+        const   indentMode  = this.state.indentMode;
+        const  indentQuantity  = this.state.indentQuantity;
 
         const originalCode = this.state.originalCode.trim();
-
+        pd.changeStepAndType(indentMode, indentQuantity);
         let formattedCode = '';
 
         if(outputMode === 'xml') {
