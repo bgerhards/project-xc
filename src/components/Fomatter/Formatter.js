@@ -31,12 +31,8 @@ class Formatter extends Component {
                     bothTags: true
                 }
             },
-            indentMode: {
-                value: 'TAB'}
-                ,
-            indentQuantity: {
-                value: '3'
-            }
+            indentMode: 'TAB',
+            indentQuantity: 3
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -46,6 +42,9 @@ class Formatter extends Component {
         this.handleConvertClick = this.handleConvertClick.bind(this);
 
         this.handleInputModeChange = this.handleInputModeChange.bind(this);
+        this.handleIndentModeChange = this.handleIndentModeChange.bind(this);
+        this.handleIndentQuantityChange = this.handleIndentQuantityChange.bind(this);
+
         this.handleOutputModeChange = this.handleOutputModeChange.bind(this);
     }
 
@@ -57,8 +56,8 @@ class Formatter extends Component {
     handleFormatClick() {
         const {  mode: inputMode } = this.state.inputOptions;
         const { mode: outputMode } = this.state.outputOptions;
-        const   indentMode  = this.state.indentMode;
-        const  indentQuantity  = this.state.indentQuantity;
+        const indentMode  = this.state.indentMode;
+        const indentQuantity  = this.state.indentQuantity;
 
         const originalCode = this.state.originalCode.trim();
         pd.changeStepAndType(indentMode, indentQuantity);
@@ -160,6 +159,18 @@ class Formatter extends Component {
         this.setState(newState);
     }
 
+    handleIndentModeChange(indentMode) {
+        const newState = Object.assign({}, this.state, { indentMode });
+
+        this.setState(newState);
+    }
+
+    handleIndentQuantityChange(indentQuantity) {
+        const newState = Object.assign({}, this.state, { indentQuantity });
+
+        this.setState(newState);
+    }
+
     handleOutputModeChange(mode) {
         const outputOptions = Object.assign({}, this.state.outputOptions, { mode });
         const newState = Object.assign({} , this.state, { outputOptions });
@@ -182,6 +193,10 @@ class Formatter extends Component {
                             handleOutputModeChange={this.handleOutputModeChange}
                             options={this.state.inputOptions}
                             outputMode={this.state.outputOptions.mode}
+                            indentMode={this.state.indentMode}
+                            indentQuantity={this.state.indentQuantity}
+                            handleIndentModeChange={this.handleIndentModeChange}
+                            handleIndentQuantityChange={this.handleIndentQuantityChange}
                         />
                     </div>
                     <div className="col-xs-6">

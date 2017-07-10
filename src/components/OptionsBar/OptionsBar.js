@@ -2,8 +2,10 @@ import React from 'react';
 
 import './OptionsBar.css';
 
-export default ({ options: { mode, value, tabSize }, handleModeChange }) => {
-    const onModeChange = e => handleModeChange(e.target.value);
+export default (props) => {
+    const onModeChange = e => props.handleModeChange(e.target.value);
+    const onIndentModeChange = e => props.handleIndentModeChange(e.target.value);
+    const onIndentQuantityChange = e => props.handleIndentQuantityChange(e.target.value);
 
     return (
         <div className="OptionsBar">
@@ -12,9 +14,9 @@ export default ({ options: { mode, value, tabSize }, handleModeChange }) => {
                     <select 
                         className="mdc-select"
                         name="mode"
-                        id="mode"
+                        id="mode"                        
+                        value={props.mode}
                         onChange={onModeChange}
-                        value={mode}
                     >
                         <option value="xml">XML</option>
                         <option value="application/json">JSON</option>
@@ -23,7 +25,8 @@ export default ({ options: { mode, value, tabSize }, handleModeChange }) => {
                         className="mdc-select"
                         name="indentMode"
                         id="indentMode"
-                        value={value}
+                        value={props.indentMode}
+                        onChange={onIndentModeChange}
                     >
                         <option value="SPACE">SPACE</option>
                         <option value="TAB">TAB</option>
@@ -32,7 +35,8 @@ export default ({ options: { mode, value, tabSize }, handleModeChange }) => {
                         className="mdc-select"
                         name="indentQuantity"
                         id="indentQuantity"
-                        value={value}
+                        value={props.indentQuantity}
+                        onChange={onIndentQuantityChange}
                     >
                         <option value="1">1</option>
                         <option value="2">2</option>
