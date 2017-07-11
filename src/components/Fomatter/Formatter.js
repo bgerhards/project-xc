@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { pd } from 'pretty-data';
+import { SweetData as sd } from 'sweet-data';
 import { parseString as ps, Builder } from 'xml2js';
 
 import './Formatter.css';
@@ -60,12 +60,12 @@ class Formatter extends Component {
         const indentQuantity  = this.state.indentQuantity;
 
         const originalCode = this.state.originalCode.trim();
-        pd.changeStepAndType(indentMode, indentQuantity);
+        sd.setStep(indentQuantity,indentMode);
         let formattedCode = '';
 
         if(outputMode === 'xml') {
             if(inputMode === 'xml') {
-                formattedCode = pd.xml(originalCode);
+                formattedCode = sd.xml(originalCode);
 
                 const newState = Object.assign({}, this.state, { formattedCode });
                 this.setState(newState);
@@ -75,7 +75,7 @@ class Formatter extends Component {
         if(outputMode === 'application/json') {
             if(inputMode === 'xml') {
                 ps(this.state.originalCode, { trim: true }, (err, result) => {
-                    formattedCode = pd.json(result);
+                    formattedCode = sd.json(result);
 
                     const newState = Object.assign({}, this.state, { formattedCode });
 
@@ -92,7 +92,7 @@ class Formatter extends Component {
         const originalCode = inputMode !== outputMode ? this.handleConvert(this.state.originalCode.trim(), inputMode, outputMode) : this.state.originalCode.trim();
         const outputMethod = (outputMode === 'application/json' ? 'json' : outputMode) + 'min';
 
-        const formattedCode = pd[outputMethod](originalCode);
+        const formattedCode = sd[outputMethod](originalCode);
         const newState = Object.assign({}, this.state, { formattedCode });
 
         this.setState(newState);
@@ -111,7 +111,7 @@ class Formatter extends Component {
         if(inputMode === 'application/json'){
             const builder = new Builder();
             const xml = builder.buildObject(JSON.parse(originalCode));
-            formattedCode = pd.xml(xml.trim());
+            formattedCode = sd.xml(xml.trim());
         }
 
         return formattedCode;
@@ -121,7 +121,7 @@ class Formatter extends Component {
         let formattedCode = '';
         if(inputMode === 'xml'){
             ps(this.state.originalCode, { trim: true }, (err, result) => {
-                formattedCode = pd.json(result);
+                formattedCode = sd.json(result);
             });
         }
 
@@ -133,7 +133,7 @@ class Formatter extends Component {
 
         if(mode === 'xml') {
             ps(this.state.originalCode, { trim: true }, (err, result) => {
-                const formattedCode = pd.json(JSON.stringify(result));
+                const formattedCode = sd.json(JSON.stringify(result));
                 const outputOptions = Object.assign({}, this.state.outputOptions, { mode: 'application/json' });
 
                 const newState = Object.assign({}, this.state, { formattedCode, outputOptions });
@@ -144,7 +144,7 @@ class Formatter extends Component {
         else if(mode === 'application/json') {
             const builder = new Builder();
             const xml = builder.buildObject(JSON.parse(this.state.originalCode));
-            const formattedCode = pd.xml(xml.trim());
+            const formattedCode = sd.xml(xml.trim());
 
             const newState = Object.assign({}, this.state, { formattedCode });
 
