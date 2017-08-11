@@ -15,7 +15,7 @@ class Formatter extends Component {
             originalCode: '',
             formattedCode: '',
             inputOptions: {
-			    lineNumbers: true,
+                lineNumbers: true,
                 mode: 'xml',
                 autofocus: true,
                 theme: 'material',
@@ -24,7 +24,7 @@ class Formatter extends Component {
                 }
             },
             outputOptions: {
-			    lineNumbers: true,
+                lineNumbers: true,
                 mode: 'xml',
                 theme: 'material',
                 matchTags: {
@@ -54,39 +54,47 @@ class Formatter extends Component {
     }
 
     handleFormatClick() {
-        const {  mode: inputMode } = this.state.inputOptions;
+        const { mode: inputMode } = this.state.inputOptions;
         const { mode: outputMode } = this.state.outputOptions;
-        const indentMode  = this.state.indentMode;
-        const indentQuantity  = this.state.indentQuantity;
+        const indentMode = this.state.indentMode;
+        const indentQuantity = this.state.indentQuantity;
 
         const originalCode = this.state.originalCode.trim();
-        sd.setStep(indentQuantity,indentMode);
+        sd.setStep(indentQuantity, indentMode);
         let formattedCode = '';
 
-        if(outputMode === 'xml') {
-            if(inputMode === 'xml') {
+        if (outputMode === 'xml') {
+            if (inputMode === 'xml') {
                 formattedCode = sd.xml(originalCode);
 
                 const newState = Object.assign({}, this.state, { formattedCode });
                 this.setState(newState);
             }
+
+            if (inputMode === 'application/json') {
+
+            }
         }
 
-        if(outputMode === 'application/json') {
-            if(inputMode === 'xml') {
+        if (outputMode === 'application/json') {
+            if (inputMode === 'xml') {
                 ps(this.state.originalCode, { trim: true }, (err, result) => {
                     formattedCode = sd.json(result);
-
                     const newState = Object.assign({}, this.state, { formattedCode });
-
                     this.setState(newState);
                 });
+            }
+
+            if (inputMode === 'application/json') {
+                    formattedCode = sd.json(originalCode);
+                    const newState = Object.assign({}, this.state, { formattedCode });
+                    this.setState(newState);
             }
         }
     }
 
     handleMinifyClick() {
-        const {  mode: inputMode } = this.state.inputOptions;
+        const { mode: inputMode } = this.state.inputOptions;
         const { mode: outputMode } = this.state.outputOptions;
 
         const originalCode = inputMode !== outputMode ? this.handleConvert(this.state.originalCode.trim(), inputMode, outputMode) : this.state.originalCode.trim();
@@ -98,17 +106,17 @@ class Formatter extends Component {
         this.setState(newState);
     }
 
-    handleConvert(originalCode, inputMode, outputMode){
-        switch(outputMode){
+    handleConvert(originalCode, inputMode, outputMode) {
+        switch (outputMode) {
             case 'xml': return this.xmlConversion(originalCode, inputMode);
             case 'application/json': return this.jsonConversion(originalCode, inputMode);
             default: return originalCode;
         }
     }
 
-    xmlConversion(originalCode, inputMode){
+    xmlConversion(originalCode, inputMode) {
         let formattedCode = '';
-        if(inputMode === 'application/json'){
+        if (inputMode === 'application/json') {
             const builder = new Builder();
             const xml = builder.buildObject(JSON.parse(originalCode));
             formattedCode = sd.xml(xml.trim());
@@ -117,9 +125,9 @@ class Formatter extends Component {
         return formattedCode;
     }
 
-    jsonConversion(originalCode, inputMode){
+    jsonConversion(originalCode, inputMode) {
         let formattedCode = '';
-        if(inputMode === 'xml'){
+        if (inputMode === 'xml') {
             ps(this.state.originalCode, { trim: true }, (err, result) => {
                 formattedCode = sd.json(result);
             });
@@ -131,7 +139,7 @@ class Formatter extends Component {
     handleConvertClick() {
         const { mode } = this.state.outputOptions;
 
-        if(mode === 'xml') {
+        if (mode === 'xml') {
             ps(this.state.originalCode, { trim: true }, (err, result) => {
                 const formattedCode = sd.json(JSON.stringify(result));
                 const outputOptions = Object.assign({}, this.state.outputOptions, { mode: 'application/json' });
@@ -141,7 +149,7 @@ class Formatter extends Component {
                 this.setState(newState);
             });
         }
-        else if(mode === 'application/json') {
+        else if (mode === 'application/json') {
             const builder = new Builder();
             const xml = builder.buildObject(JSON.parse(this.state.originalCode));
             const formattedCode = sd.xml(xml.trim());
@@ -173,7 +181,7 @@ class Formatter extends Component {
 
     handleOutputModeChange(mode) {
         const outputOptions = Object.assign({}, this.state.outputOptions, { mode });
-        const newState = Object.assign({} , this.state, { outputOptions });
+        const newState = Object.assign({}, this.state, { outputOptions });
 
         this.setState(newState);
     }
