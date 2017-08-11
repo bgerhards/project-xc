@@ -72,23 +72,25 @@ class Formatter extends Component {
             }
 
             if (inputMode === 'application/json') {
+                formattedCode = sd.xml(this.handleConvert(originalCode, inputMode, outputMode));
 
+                const newState = Object.assign({}, this.state, { formattedCode });
+                this.setState(newState);
+                
             }
         }
 
         if (outputMode === 'application/json') {
             if (inputMode === 'xml') {
-                ps(this.state.originalCode, { trim: true }, (err, result) => {
-                    formattedCode = sd.json(result);
-                    const newState = Object.assign({}, this.state, { formattedCode });
-                    this.setState(newState);
-                });
+                formattedCode = sd.json(this.handleConvert(originalCode, inputMode, outputMode));
+                const newState = Object.assign({}, this.state, { formattedCode });
+                this.setState(newState);
             }
 
             if (inputMode === 'application/json') {
-                    formattedCode = sd.json(originalCode);
-                    const newState = Object.assign({}, this.state, { formattedCode });
-                    this.setState(newState);
+                formattedCode = sd.json(originalCode);
+                const newState = Object.assign({}, this.state, { formattedCode });
+                this.setState(newState);
             }
         }
     }
