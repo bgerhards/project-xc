@@ -62,37 +62,24 @@ class Formatter extends Component {
         const originalCode = this.state.originalCode.trim();
         sd.setStep(indentQuantity, indentMode);
         let formattedCode = '';
+        let convertedCode = inputMode !== outputMode
+            ? this.handleConvert(originalCode, inputMode, outputMode)
+            : originalCode;
 
-        if (outputMode === 'xml') {
-            if (inputMode === 'xml') {
-                formattedCode = sd.xml(originalCode);
-
-                const newState = Object.assign({}, this.state, { formattedCode });
-                this.setState(newState);
-            }
-
-            if (inputMode === 'application/json') {
-                formattedCode = sd.xml(this.handleConvert(originalCode, inputMode, outputMode));
-
-                const newState = Object.assign({}, this.state, { formattedCode });
-                this.setState(newState);
-                
-            }
+        switch (outputMode) {
+            case 'xml':
+                formattedCode = sd.xml(convertedCode);
+                break;
+            case 'application/json':
+                formattedCode = sd.json(convertedCode);
+                break;
+            default:
+                console.log('There will be an error...');
         }
 
-        if (outputMode === 'application/json') {
-            if (inputMode === 'xml') {
-                formattedCode = sd.json(this.handleConvert(originalCode, inputMode, outputMode));
-                const newState = Object.assign({}, this.state, { formattedCode });
-                this.setState(newState);
-            }
+        const newState = Object.assign({}, this.state, { formattedCode });
+        this.setState(newState);
 
-            if (inputMode === 'application/json') {
-                formattedCode = sd.json(originalCode);
-                const newState = Object.assign({}, this.state, { formattedCode });
-                this.setState(newState);
-            }
-        }
     }
 
     handleMinifyClick() {
