@@ -47,9 +47,6 @@ class Formatter extends Component {
         this.handleMinifyClick = this
             .handleMinifyClick
             .bind(this);
-        this.handleConvertClick = this
-            .handleConvertClick
-            .bind(this);
 
         this.handleInputModeChange = this
             .handleInputModeChange
@@ -72,32 +69,35 @@ class Formatter extends Component {
     }
 
     handleFormatClick() {
-        const {mode: inputMode} = this.state.inputOptions;
-        const {mode: outputMode} = this.state.outputOptions;
-        const indentMode = this.state.indentMode;
-        const indentQuantity = this.state.indentQuantity;
+        const { mode: inputMode } = this.state.inputOptions;
+        const { mode: outputMode } = this.state.outputOptions;
+
+        const { indentMode, indentQuantity } = this.state;
 
         sd.setStep(indentQuantity, indentMode);
 
-        var originalCode = this.handleConvert(this.state.originalCode.trim(), inputMode, outputMode).then(originalCode => sd[CONVERT_METHODS[outputMode]](originalCode));
-
-        originalCode.then(formattedCode => {
-            const newState = Object.assign({}, this.state, {formattedCode});
-            this.setState(newState);
-        })
+        this.handleConvert(this.state.originalCode.trim(), inputMode, outputMode)
+            .then(originalCode => sd[CONVERT_METHODS[outputMode]](originalCode))
+            .then(formattedCode => {
+                const newState = Object.assign({}, this.state, {formattedCode});
+                this.setState(newState);
+            });
     }
 
     handleMinifyClick() {
-        const {mode: inputMode} = this.state.inputOptions;
-        const {mode: outputMode} = this.state.outputOptions;
+        const { mode: inputMode } = this.state.inputOptions;
+        const { mode: outputMode}  = this.state.outputOptions;
 
-        var originalCode = this.handleConvert(this.state.originalCode.trim(), inputMode, outputMode).then(originalCode => sd[CONVERT_METHODS[outputMode] + 'min'](originalCode));
+        const { indentMode, indentQuantity } = this.state;
 
-        originalCode.then(formattedCode => {
-            const newState = Object.assign({}, this.state, {formattedCode});
-            this.setState(newState);
-        })
+        sd.setStep(indentQuantity, indentMode);
 
+        this.handleConvert(this.state.originalCode.trim(), inputMode, outputMode)
+            .then(originalCode => sd[CONVERT_METHODS[outputMode] + 'min'](JSON.stringify(originalCode)))
+            .then(formattedCode => {
+                const newState = Object.assign({}, this.state, {formattedCode});
+                this.setState(newState);
+            });
     }
 
     handleConvert(originalCode, inputMode, outputMode) {
@@ -133,8 +133,6 @@ class Formatter extends Component {
             }
         })
     }
-
-    handleConvertClick() {}
 
     handleInputModeChange(mode) {
         const inputOptions = Object.assign({}, this.state.inputOptions, {mode});
@@ -172,7 +170,6 @@ class Formatter extends Component {
                             handleChange={this.handleChange}
                             handleFormatClick={this.handleFormatClick}
                             handleMinifyClick={this.handleMinifyClick}
-                            handleConvertClick={this.handleConvertClick}
                             handleInputModeChange={this.handleInputModeChange}
                             handleOutputModeChange={this.handleOutputModeChange}
                             options={this.state.inputOptions}
