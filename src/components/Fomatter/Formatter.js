@@ -115,9 +115,10 @@ class Formatter extends Component {
             let xml = '';
             if (inputMode === 'application/json') {
                 const builder = new Builder();
-                xml = builder.buildObject(JSON.parse(originalCode));
+                resolve(builder.buildObject(JSON.parse(originalCode)));
+            } else {
+                resolve(xml);
             }
-            resolve(xml);
         })
     }
 
