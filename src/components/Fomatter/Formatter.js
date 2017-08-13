@@ -7,6 +7,8 @@ import './Formatter.css';
 import Input from '../Input/Input';
 import Output from '../Output/Output';
 
+import { CONVERT_METHODS } from './Formatter.constants';
+
 class Formatter extends Component {
     constructor(props) {
         super(props);
@@ -32,11 +34,7 @@ class Formatter extends Component {
                 }
             },
             indentMode: 'TAB',
-            indentQuantity: 2,
-            methodConvert: {
-                "xml": "xml",
-                "application/json": "json"
-            }
+            indentQuantity: 2
         };
 
         this.handleChange = this
@@ -81,7 +79,7 @@ class Formatter extends Component {
 
         sd.setStep(indentQuantity, indentMode);
 
-        var originalCode = this.handleConvert(this.state.originalCode.trim(), inputMode, outputMode).then(originalCode => sd[this.state.methodConvert[outputMode]](originalCode));
+        var originalCode = this.handleConvert(this.state.originalCode.trim(), inputMode, outputMode).then(originalCode => sd[CONVERT_METHODS[outputMode]](originalCode));
 
         originalCode.then(formattedCode => {
             const newState = Object.assign({}, this.state, {formattedCode});
@@ -93,7 +91,7 @@ class Formatter extends Component {
         const {mode: inputMode} = this.state.inputOptions;
         const {mode: outputMode} = this.state.outputOptions;
 
-        var originalCode = this.handleConvert(this.state.originalCode.trim(), inputMode, outputMode).then(originalCode => sd[this.state.methodConvert[outputMode] + 'min'](originalCode));
+        var originalCode = this.handleConvert(this.state.originalCode.trim(), inputMode, outputMode).then(originalCode => sd[CONVERT_METHODS[outputMode] + 'min'](originalCode));
 
         originalCode.then(formattedCode => {
             const newState = Object.assign({}, this.state, {formattedCode});
@@ -105,7 +103,7 @@ class Formatter extends Component {
     handleConvert(originalCode, inputMode, outputMode) {
         return new Promise((resolve, reject) => {
             inputMode !== outputMode
-                ? resolve(this[this.state.methodConvert[outputMode] + 'Conversion'](originalCode, inputMode))
+                ? resolve(this[CONVERT_METHODS[outputMode] + 'Conversion'](originalCode, inputMode))
                 : resolve(originalCode)
         })
     }
