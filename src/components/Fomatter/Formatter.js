@@ -34,7 +34,7 @@ class Formatter extends Component {
                 }
             },
             indentMode: 'TAB',
-            indentQuantity: 2
+            indentQuantity: 1
         };
 
         this.handleChange = this
