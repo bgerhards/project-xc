@@ -98,14 +98,9 @@ class Formatter extends Component {
         const {mode: inputMode} = this.state.inputOptions;
         const {mode: outputMode} = this.state.outputOptions;
 
-        const originalCode = inputMode !== outputMode
-            ? this.handleConvert(this.state.originalCode.trim(), inputMode, outputMode)
-            : this
-                .state
-                .originalCode
-                .trim();
+        var originalCode = this.handleConvert(this.state.originalCode.trim(), inputMode, outputMode).then(originalCode => sd[this.state.methodConvert[outputMode] + 'min'](originalCode));
 
-        sd[this.state.methodConvert[outputMode] + 'min'](originalCode).then(formattedCode => {
+        originalCode.then(formattedCode => {
             const newState = Object.assign({}, this.state, {formattedCode});
             this.setState(newState);
         })
@@ -113,64 +108,40 @@ class Formatter extends Component {
     }
 
     handleConvert(originalCode, inputMode, outputMode) {
-        switch (outputMode) {
-            case 'xml':
-                return this.xmlConversion(originalCode, inputMode);
-            case 'application/json':
-                return this.jsonConversion(originalCode, inputMode);
-            default:
-                return originalCode;
-        }
+        return Promise((resolve, reject) => {
+            inputMode !== outputMode
+                ? resolve(this[this.state.methodConvert[outputMode] + 'Conversion'](originalCode, inputMode))
+                : resolve(originalCode)
+        })
     }
 
     xmlConversion(originalCode, inputMode) {
-        let formattedCode = '';
-        if (inputMode === 'application/json') {
-            const builder = new Builder();
-            const xml = builder.buildObject(JSON.parse(originalCode));
-            formattedCode = sd.xml(xml.trim());
-        }
-
-        return formattedCode;
+        return new Promise((resolve, reject) => {
+            let xml = '';
+            if (inputMode === 'application/json') {
+                const builder = new Builder();
+                xml = builder.buildObject(JSON.parse(originalCode));
+            }
+            resolve(xml);
+        })
     }
 
     jsonConversion(originalCode, inputMode) {
-        let formattedCode = '';
-        if (inputMode === 'xml') {
-            ps(this.state.originalCode, {
-                trim: true
-            }, (err, result) => {
-                formattedCode = sd.json(result);
-            });
-        }
-
-        return formattedCode;
+        return new Promise((resolve, reject) => {
+            let formattedCode = '';
+            if (inputMode === 'xml') {
+                ps(this.state.originalCode, {
+                    trim: true
+                }, (err, result) => {
+                    resolve(formattedCode);
+                });
+            } else {
+                resolve(formattedCode);
+            }
+        })
     }
 
-    handleConvertClick() {
-        const {mode} = this.state.outputOptions;
-
-        if (mode === 'xml') {
-            ps(this.state.originalCode, {
-                trim: true
-            }, (err, result) => {
-                const formattedCode = sd.json(JSON.stringify(result));
-                const outputOptions = Object.assign({}, this.state.outputOptions, {mode: 'application/json'});
-
-                const newState = Object.assign({}, this.state, {formattedCode, outputOptions});
-
-                this.setState(newState);
-            });
-        } else if (mode === 'application/json') {
-            const builder = new Builder();
-            const xml = builder.buildObject(JSON.parse(this.state.originalCode));
-            const formattedCode = sd.xml(xml.trim());
-
-            const newState = Object.assign({}, this.state, {formattedCode});
-
-            this.setState(newState);
-        }
-    }
+    handleConvertClick() {}
 
     handleInputModeChange(mode) {
         const inputOptions = Object.assign({}, this.state.inputOptions, {mode});
