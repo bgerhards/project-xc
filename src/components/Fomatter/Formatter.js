@@ -79,19 +79,14 @@ class Formatter extends Component {
         const indentMode = this.state.indentMode;
         const indentQuantity = this.state.indentQuantity;
 
-        const originalCode = this
-            .state
-            .originalCode
-            .trim();
         sd.setStep(indentQuantity, indentMode);
-        let convertedCode = inputMode !== outputMode
-            ? this.handleConvert(originalCode, inputMode, outputMode)
-            : originalCode;
 
-        sd[this.state.methodConvert[outputMode]](convertedCode).then(formattedCode => {
+        var originalCode = this.handleConvert(this.state.originalCode.trim(), inputMode, outputMode).then(originalCode => sd[this.state.methodConvert[outputMode]](originalCode));
+
+        originalCode.then(formattedCode => {
             const newState = Object.assign({}, this.state, {formattedCode});
             this.setState(newState);
-        });
+        })
     }
 
     handleMinifyClick() {
@@ -108,7 +103,7 @@ class Formatter extends Component {
     }
 
     handleConvert(originalCode, inputMode, outputMode) {
-        return Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             inputMode !== outputMode
                 ? resolve(this[this.state.methodConvert[outputMode] + 'Conversion'](originalCode, inputMode))
                 : resolve(originalCode)
@@ -128,15 +123,14 @@ class Formatter extends Component {
 
     jsonConversion(originalCode, inputMode) {
         return new Promise((resolve, reject) => {
-            let formattedCode = '';
             if (inputMode === 'xml') {
                 ps(this.state.originalCode, {
                     trim: true
                 }, (err, result) => {
-                    resolve(formattedCode);
+                    resolve(result);
                 });
             } else {
-                resolve(formattedCode);
+                resolve(originalCode);
             }
         })
     }
