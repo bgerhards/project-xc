@@ -1,11 +1,13 @@
-import React, { Component } from 'react';
-import { SweetData as sd } from 'sweet-data';
-import { parseString as ps, Builder } from 'xml2js';
+import React, {Component} from 'react';
+import {SweetData as sd} from 'sweet-data';
+import {parseString as ps, Builder} from 'xml2js';
 
 import './Formatter.css';
 
 import Input from '../Input/Input';
 import Output from '../Output/Output';
+
+import { CONVERT_METHODS } from './Formatter.constants';
 
 class Formatter extends Component {
     constructor(props) {
@@ -32,145 +34,128 @@ class Formatter extends Component {
                 }
             },
             indentMode: 'TAB',
-            indentQuantity: 2
+            indentQuantity: 1
         };
 
-        this.handleChange = this.handleChange.bind(this);
+        this.handleChange = this
+            .handleChange
+            .bind(this);
 
-        this.handleFormatClick = this.handleFormatClick.bind(this);
-        this.handleMinifyClick = this.handleMinifyClick.bind(this);
-        this.handleConvertClick = this.handleConvertClick.bind(this);
+        this.handleFormatClick = this
+            .handleFormatClick
+            .bind(this);
+        this.handleMinifyClick = this
+            .handleMinifyClick
+            .bind(this);
 
-        this.handleInputModeChange = this.handleInputModeChange.bind(this);
-        this.handleIndentModeChange = this.handleIndentModeChange.bind(this);
-        this.handleIndentQuantityChange = this.handleIndentQuantityChange.bind(this);
+        this.handleInputModeChange = this
+            .handleInputModeChange
+            .bind(this);
+        this.handleIndentModeChange = this
+            .handleIndentModeChange
+            .bind(this);
+        this.handleIndentQuantityChange = this
+            .handleIndentQuantityChange
+            .bind(this);
 
-        this.handleOutputModeChange = this.handleOutputModeChange.bind(this);
+        this.handleOutputModeChange = this
+            .handleOutputModeChange
+            .bind(this);
     }
 
     handleChange(newCode) {
-        const newState = Object.assign({}, this.state, { originalCode: newCode });
+        const newState = Object.assign({}, this.state, {originalCode: newCode});
         this.setState(newState);
     }
 
     handleFormatClick() {
         const { mode: inputMode } = this.state.inputOptions;
         const { mode: outputMode } = this.state.outputOptions;
-        const indentMode = this.state.indentMode;
-        const indentQuantity = this.state.indentQuantity;
 
-        const originalCode = this.state.originalCode.trim();
+        const { indentMode, indentQuantity } = this.state;
+
         sd.setStep(indentQuantity, indentMode);
-        let formattedCode = '';
-        let convertedCode = inputMode !== outputMode
-            ? this.handleConvert(originalCode, inputMode, outputMode)
-            : originalCode;
 
-        switch (outputMode) {
-            case 'xml':
-                formattedCode = sd.xml(convertedCode);
-                break;
-            case 'application/json':
-                formattedCode = sd.json(convertedCode);
-                break;
-            default:
-                console.log('There will be an error...');
-        }
-
-        const newState = Object.assign({}, this.state, { formattedCode });
-        this.setState(newState);
-
+        this.handleConvert(this.state.originalCode.trim(), inputMode, outputMode)
+            .then(originalCode => sd[CONVERT_METHODS[outputMode]](originalCode))
+            .then(formattedCode => {
+                const newState = Object.assign({}, this.state, {formattedCode});
+                this.setState(newState);
+            });
     }
 
     handleMinifyClick() {
         const { mode: inputMode } = this.state.inputOptions;
-        const { mode: outputMode } = this.state.outputOptions;
+        const { mode: outputMode}  = this.state.outputOptions;
 
-        const originalCode = inputMode !== outputMode ? this.handleConvert(this.state.originalCode.trim(), inputMode, outputMode) : this.state.originalCode.trim();
-        const outputMethod = (outputMode === 'application/json' ? 'json' : outputMode) + 'min';
+        const { indentMode, indentQuantity } = this.state;
 
-        const formattedCode = sd[outputMethod](originalCode);
-        const newState = Object.assign({}, this.state, { formattedCode });
+        sd.setStep(indentQuantity, indentMode);
 
-        this.setState(newState);
+        this.handleConvert(this.state.originalCode.trim(), inputMode, outputMode)
+            .then(originalCode => sd[CONVERT_METHODS[outputMode] + 'min'](originalCode))
+            .then(formattedCode => {
+                const newState = Object.assign({}, this.state, {formattedCode});
+                this.setState(newState);
+            });
     }
 
     handleConvert(originalCode, inputMode, outputMode) {
-        switch (outputMode) {
-            case 'xml': return this.xmlConversion(originalCode, inputMode);
-            case 'application/json': return this.jsonConversion(originalCode, inputMode);
-            default: return originalCode;
-        }
+        return new Promise((resolve, reject) => {
+            inputMode !== outputMode
+                ? resolve(this[CONVERT_METHODS[outputMode] + 'Conversion'](originalCode, inputMode))
+                : resolve(originalCode)
+        })
     }
 
     xmlConversion(originalCode, inputMode) {
-        let formattedCode = '';
-        if (inputMode === 'application/json') {
-            const builder = new Builder();
-            const xml = builder.buildObject(JSON.parse(originalCode));
-            formattedCode = sd.xml(xml.trim());
-        }
-
-        return formattedCode;
+        return new Promise((resolve, reject) => {
+            let xml = '';
+            if (inputMode === 'application/json') {
+                const builder = new Builder();
+                resolve(builder.buildObject(JSON.parse(originalCode)));
+            } else {
+                resolve(xml);
+            }
+        })
     }
 
     jsonConversion(originalCode, inputMode) {
-        let formattedCode = '';
-        if (inputMode === 'xml') {
-            ps(this.state.originalCode, { trim: true }, (err, result) => {
-                formattedCode = sd.json(result);
-            });
-        }
-
-        return formattedCode;
-    }
-
-    handleConvertClick() {
-        const { mode } = this.state.outputOptions;
-
-        if (mode === 'xml') {
-            ps(this.state.originalCode, { trim: true }, (err, result) => {
-                const formattedCode = sd.json(JSON.stringify(result));
-                const outputOptions = Object.assign({}, this.state.outputOptions, { mode: 'application/json' });
-
-                const newState = Object.assign({}, this.state, { formattedCode, outputOptions });
-
-                this.setState(newState);
-            });
-        }
-        else if (mode === 'application/json') {
-            const builder = new Builder();
-            const xml = builder.buildObject(JSON.parse(this.state.originalCode));
-            const formattedCode = sd.xml(xml.trim());
-
-            const newState = Object.assign({}, this.state, { formattedCode });
-
-            this.setState(newState);
-        }
+        return new Promise((resolve, reject) => {
+            if (inputMode === 'xml') {
+                ps(this.state.originalCode, {
+                    trim: true
+                }, (err, result) => {
+                    resolve(JSON.stringify(result));
+                });
+            } else {
+                resolve(originalCode);
+            }
+        })
     }
 
     handleInputModeChange(mode) {
-        const inputOptions = Object.assign({}, this.state.inputOptions, { mode });
-        const newState = Object.assign({}, this.state, { inputOptions });
+        const inputOptions = Object.assign({}, this.state.inputOptions, {mode});
+        const newState = Object.assign({}, this.state, {inputOptions});
 
         this.setState(newState);
     }
 
     handleIndentModeChange(indentMode) {
-        const newState = Object.assign({}, this.state, { indentMode });
+        const newState = Object.assign({}, this.state, {indentMode});
 
         this.setState(newState);
     }
 
     handleIndentQuantityChange(indentQuantity) {
-        const newState = Object.assign({}, this.state, { indentQuantity });
+        const newState = Object.assign({}, this.state, {indentQuantity});
 
         this.setState(newState);
     }
 
     handleOutputModeChange(mode) {
-        const outputOptions = Object.assign({}, this.state.outputOptions, { mode });
-        const newState = Object.assign({}, this.state, { outputOptions });
+        const outputOptions = Object.assign({}, this.state.outputOptions, {mode});
+        const newState = Object.assign({}, this.state, {outputOptions});
 
         this.setState(newState);
     }
@@ -185,7 +170,6 @@ class Formatter extends Component {
                             handleChange={this.handleChange}
                             handleFormatClick={this.handleFormatClick}
                             handleMinifyClick={this.handleMinifyClick}
-                            handleConvertClick={this.handleConvertClick}
                             handleInputModeChange={this.handleInputModeChange}
                             handleOutputModeChange={this.handleOutputModeChange}
                             options={this.state.inputOptions}
@@ -193,14 +177,12 @@ class Formatter extends Component {
                             indentMode={this.state.indentMode}
                             indentQuantity={this.state.indentQuantity}
                             handleIndentModeChange={this.handleIndentModeChange}
-                            handleIndentQuantityChange={this.handleIndentQuantityChange}
-                        />
+                            handleIndentQuantityChange={this.handleIndentQuantityChange}/>
                     </div>
                     <div className="col-xs-6">
                         <Output
                             formattedCode={this.state.formattedCode}
-                            options={this.state.outputOptions}
-                        />
+                            options={this.state.outputOptions}/>
                     </div>
                 </div>
             </div>
