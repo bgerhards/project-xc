@@ -93,7 +93,7 @@ class Formatter extends Component {
         sd.setStep(indentQuantity, indentMode);
 
         this.handleConvert(this.state.originalCode.trim(), inputMode, outputMode)
-            .then(originalCode => sd[CONVERT_METHODS[outputMode] + 'min'](JSON.stringify(originalCode)))
+            .then(originalCode => sd[CONVERT_METHODS[outputMode] + 'min'](originalCode))
             .then(formattedCode => {
                 const newState = Object.assign({}, this.state, {formattedCode});
                 this.setState(newState);
@@ -126,7 +126,7 @@ class Formatter extends Component {
                 ps(this.state.originalCode, {
                     trim: true
                 }, (err, result) => {
-                    resolve(result);
+                    resolve(JSON.stringify(result));
                 });
             } else {
                 resolve(originalCode);
