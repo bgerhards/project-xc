@@ -33,8 +33,8 @@ class Formatter extends Component {
                     bothTags: true
                 }
             },
-            indentMode: 'TAB',
-            indentQuantity: 1
+            indentMode: 'SPACE',
+            indentQuantity: 2
         };
 
         this.handleChange = this
