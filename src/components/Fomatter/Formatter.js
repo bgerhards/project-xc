@@ -9,8 +9,6 @@ import Output from '../Output/Output';
 
 import { CONVERT_METHODS } from './Formatter.constants';
 
-const ga = window.ga;
-
 class Formatter extends Component {
     constructor(props) {
         super(props);
@@ -97,6 +95,8 @@ class Formatter extends Component {
 
         sd.setStep(indentQuantity, indentMode);
 
+        this.sendAnalyticsEvent('Formatter', 'minify', `${inputMode} => ${outputMode}`);
+
         this.handleConvert(this.state.originalCode.trim(), inputMode, outputMode)
             .then(originalCode => sd[CONVERT_METHODS[outputMode] + 'min'](originalCode))
             .then(formattedCode => {
@@ -143,17 +143,23 @@ class Formatter extends Component {
         const inputOptions = Object.assign({}, this.state.inputOptions, {mode});
         const newState = Object.assign({}, this.state, {inputOptions});
 
+        this.sendAnalyticsEvent('Options', 'inputMode', mode);
+
         this.setState(newState);
     }
 
     handleIndentModeChange(indentMode) {
         const newState = Object.assign({}, this.state, {indentMode});
 
+        this.sendAnalyticsEvent('Options', 'indentMode', indentMode);
+
         this.setState(newState);
     }
 
     handleIndentQuantityChange(indentQuantity) {
         const newState = Object.assign({}, this.state, {indentQuantity});
+
+        this.sendAnalyticsEvent('Options', 'indentQuantity', indentQuantity);
 
         this.setState(newState);
     }
@@ -162,11 +168,13 @@ class Formatter extends Component {
         const outputOptions = Object.assign({}, this.state.outputOptions, {mode});
         const newState = Object.assign({}, this.state, {outputOptions});
 
+        this.sendAnalyticsEvent('Options', 'outputMode', mode);
+
         this.setState(newState);
     }
 
     sendAnalyticsEvent = (eventCategory, eventAction, eventLabel) => {
-        ga('send', 'event', eventCategory, eventAction, eventLabel);
+        window.ga('send', 'event', eventCategory, eventAction, eventLabel);
     }
 
     render() {

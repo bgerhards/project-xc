@@ -33,6 +33,8 @@ class Output extends Component {
         document.execCommand('copy', false, null);
 
         fakeElem.parentElement.removeChild(fakeElem);
+
+        window.ga('send', 'event', 'Output', 'copy');
     }
 
     render() {
