@@ -9,6 +9,8 @@ import Output from '../Output/Output';
 
 import { CONVERT_METHODS } from './Formatter.constants';
 
+const ga = window.ga;
+
 class Formatter extends Component {
     constructor(props) {
         super(props);
@@ -76,10 +78,13 @@ class Formatter extends Component {
 
         sd.setStep(indentQuantity, indentMode);
 
+        this.sendAnalyticsEvent('Formatter', 'format', `${inputMode} => ${outputMode}`);
+
         this.handleConvert(this.state.originalCode.trim(), inputMode, outputMode)
             .then(originalCode => sd[CONVERT_METHODS[outputMode]](originalCode))
             .then(formattedCode => {
                 const newState = Object.assign({}, this.state, {formattedCode});
+
                 this.setState(newState);
             });
     }
@@ -158,6 +163,10 @@ class Formatter extends Component {
         const newState = Object.assign({}, this.state, {outputOptions});
 
         this.setState(newState);
+    }
+
+    sendAnalyticsEvent = (eventCategory, eventAction, eventLabel) => {
+        ga('send', 'event', eventCategory, eventAction, eventLabel);
     }
 
     render() {
